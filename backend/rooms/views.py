@@ -474,3 +474,4 @@ class UploadVideoView(APIView):
             'video_title': video_file.name,
             'video_source': 'local',
         }, status=status.HTTP_200_OK)
+
