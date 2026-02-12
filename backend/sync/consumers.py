@@ -235,3 +235,4 @@ class SyncConsumer(AsyncWebsocketConsumer):
         except Room.DoesNotExist:
             return False
 
+
