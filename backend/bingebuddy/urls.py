@@ -22,3 +22,4 @@ if settings.DEBUG:
     urlpatterns += [
         re_path(r'^media/(?P<path>.*)$', stream_video, name='stream-video'),
     ]
+
