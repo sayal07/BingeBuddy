@@ -373,3 +373,4 @@ class RecordWatchView(APIView):
             {'message': 'Watch history recorded.'},
             status=status.HTTP_201_CREATED
         )
+
