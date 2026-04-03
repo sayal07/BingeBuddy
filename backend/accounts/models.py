@@ -110,3 +110,4 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.is_subscribed and self.subscription_expiry:
             return timezone.now() < self.subscription_expiry
         return False
+

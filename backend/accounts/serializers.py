@@ -94,3 +94,4 @@ class ChangePasswordSerializer(serializers.Serializer):
                 {'confirm_new_password': 'Passwords do not match.'}
             )
         return data
+

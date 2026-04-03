@@ -256,3 +256,4 @@ class PaymentHistoryView(APIView):
             'created_at', 'verified_at'
         )[:20]
         return Response({'payments': list(payments)})
+
