@@ -200,3 +200,4 @@ CACHES = {
         'LOCATION': 'bingebuddy-cache',
     }
 }
+
