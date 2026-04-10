@@ -23,3 +23,4 @@ if settings.DEBUG:
         re_path(r'^media/(?P<path>.*)$', stream_video, name='stream-video'),
     ]
 
+
