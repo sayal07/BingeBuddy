@@ -309,6 +309,7 @@ function YouTubeFeed() {
     if (suggestRef.current) clearTimeout(suggestRef.current);
     if (searchInput.trim().length < 2) {
       setSuggestions([]);
+      setShowSuggestions(false);
       return;
     }
     suggestRef.current = setTimeout(async () => {
@@ -399,7 +400,17 @@ function YouTubeFeed() {
       </div>
 
       {/* Search with Suggestions */}
-      <form onSubmit={(e) => { e.preventDefault(); fetchVideos(searchInput); }} className="relative mb-5" ref={searchWrapperRef}>
+      <form 
+        onSubmit={(e) => { 
+          e.preventDefault(); 
+          setShowSuggestions(false);
+          setSuggestions([]);
+          fetchVideos(searchInput); 
+          e.target.querySelector('input')?.blur();
+        }} 
+        className="relative mb-5" 
+        ref={searchWrapperRef}
+      >
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500 z-10" />
         <input type="text" value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}

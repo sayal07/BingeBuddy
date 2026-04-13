@@ -768,12 +768,16 @@ export default function WatchRoomPage() {
           {isHost && (
             <div className="bg-gray-50 dark:bg-surface-800/60 border-t border-gray-200 dark:border-white/5 px-3 sm:px-4 py-2 sm:py-3 shrink-0">
               <div className="flex gap-4 mb-2">
-                <div className="text-[10px] font-semibold flex items-center gap-1.5 text-brand-400">
-                  <FileVideo className="w-3 h-3" /> Local Video Hosting
-                </div>
+
+                <div className="text-[12px] font-semibold flex items-center gap-1.5 text-red-400 whitespace-nowrap">
+  <Youtube className="w-4 h-4 mt-0.5" /> YouTube URL
+</div>
+                <div className="text-[13px] font-semibold flex items-center justify-center gap-1.5 text-brand-400 w-full pl-[15px]">
+  <FileVideo className="w-3 h-3" /> Local Video Hosting
+</div>
               </div>
               <form onSubmit={handleUploadVideo} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                <Youtube className="w-3 h-3 text-red-400 shrink-0" />
+                
 <input type="text" value={ytInput} onChange={(e) => setYtInput(e.target.value)}
   onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleSetYoutube(); } }}
   placeholder="Paste YouTube URL..." className="input-field text-xs py-1.5 h-8 flex-1" />
