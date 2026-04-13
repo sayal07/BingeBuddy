@@ -773,6 +773,14 @@ export default function WatchRoomPage() {
                 </div>
               </div>
               <form onSubmit={handleUploadVideo} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                <Youtube className="w-3 h-3 text-red-400 shrink-0" />
+<input type="text" value={ytInput} onChange={(e) => setYtInput(e.target.value)}
+  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleSetYoutube(); } }}
+  placeholder="Paste YouTube URL..." className="input-field text-xs py-1.5 h-8 flex-1" />
+<button type="button" onClick={handleSetYoutube} disabled={!ytInput.trim()}
+  className="btn-primary text-xs px-3 h-8 whitespace-nowrap flex items-center gap-1.5 shrink-0 disabled:opacity-40">
+  Load
+</button>
                 <input type="file" accept="video/*,.mkv" onChange={(e) => setVideoFile(e.target.files[0])}
                   className="flex-1 text-[10px] sm:text-sm text-gray-400 file:mr-3 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-medium file:bg-brand-600/10 file:text-brand-400 hover:file:bg-brand-600/20" />
                 <button type="submit" disabled={!videoFile || isUploading}
