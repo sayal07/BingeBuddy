@@ -68,10 +68,12 @@ class Room(models.Model):
     @property
     def participant_count(self):
         return self.participants.count()
+    
 
     @property
     def is_full(self):
         return self.participant_count >= self.max_participants
+    
 
 
 class SyncLog(models.Model):

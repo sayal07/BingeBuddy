@@ -9,6 +9,7 @@ import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import VerifyOTPPage from "./pages/VerifyOTPPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import DashboardPage from "./pages/DashboardPage";
 import WatchRoomPage from "./pages/WatchRoomPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -53,6 +54,7 @@ function AppRoutes() {
       {/* Guest-only */}
       <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
       <Route path="/signup" element={<GuestRoute><SignupPage /></GuestRoute>} />
+      <Route path="/forgot-password" element={<GuestRoute><ForgotPasswordPage /></GuestRoute>} />
       <Route path="/verify-otp" element={<VerifyOTPPage />} />
 
       {/* Subscription — must be logged in but doesn't require active sub */}

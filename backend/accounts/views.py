@@ -13,7 +13,8 @@ from django.utils import timezone
 from .models import User
 from .serializers import (
     SignupSerializer, OTPVerifySerializer, ResendOTPSerializer,
-    LoginSerializer, UserProfileSerializer, ChangePasswordSerializer
+    LoginSerializer, UserProfileSerializer, ChangePasswordSerializer,
+    ForgotPasswordSerializer, ResetPasswordSerializer
 )
 from .utils import generate_otp, send_otp_email, is_otp_valid, can_resend_otp
 
@@ -199,5 +200,94 @@ class ChangePasswordView(APIView):
         user.save()
         return Response(
             {'message': 'Password changed successfully.'},
+            status=status.HTTP_200_OK
+        )
+
+
+class ForgotPasswordView(APIView):
+    """Send OTP to user's email for password reset."""
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email'].lower()
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            # Don't reveal whether email exists for security
+            return Response(
+                {'message': 'If an account with that email exists, a reset code has been sent.'},
+                status=status.HTTP_200_OK
+            )
+
+        if not user.is_verified:
+            return Response(
+                {'error': 'This account has not been verified yet.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if user.is_otp_locked:
+            return Response(
+                {'error': 'Account is temporarily locked. Try again later.'},
+                status=status.HTTP_429_TOO_MANY_REQUESTS
+            )
+
+        if not can_resend_otp(user):
+            return Response(
+                {'error': 'Please wait 60 seconds before requesting a new code.'},
+                status=status.HTTP_429_TOO_MANY_REQUESTS
+            )
+
+        otp = generate_otp()
+        user.otp_code = otp
+        user.otp_created_at = timezone.now()
+        user.save()
+
+        try:
+            send_otp_email(user.email, otp)
+        except Exception:
+            return Response(
+                {'error': 'Failed to send reset email. Please try again.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response(
+            {'message': 'If an account with that email exists, a reset code has been sent.',
+             'email': email},
+            status=status.HTTP_200_OK
+        )
+
+
+class ResetPasswordView(APIView):
+    """Verify OTP and set new password."""
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = ResetPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data['email'].lower()
+        otp = serializer.validated_data['otp']
+        new_password = serializer.validated_data['new_password']
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'User not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        success, error = is_otp_valid(user, otp)
+        if not success:
+            return Response({'error': error}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+
+        return Response(
+            {'message': 'Password reset successfully. You can now log in.'},
             status=status.HTTP_200_OK
         )
